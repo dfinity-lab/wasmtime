@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["add_to_linker","Adds all instance items to the specified `Linker`."]],"struct":[["WasiNnCtx","This structure provides the Rust-side context necessary for implementing the wasi-nn API. At the moment, it is specialized for a single inference implementation (i.e. OpenVINO) but conceivably this could support more than one backing implementation."]]});
