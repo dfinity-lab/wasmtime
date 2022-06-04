@@ -41,6 +41,14 @@ pub fn builder() -> Result<isa::Builder, &'static str> {
 /// useful when more than oen backend exists for a given target
 /// (e.g., on x86-64).
 pub fn builder_with_options(infer_native_flags: bool) -> Result<isa::Builder, &'static str> {
+    use cranelift_codegen::settings::Configurable;
+    // A helper to set a feature flag to the given value.
+    fn set(isa_builder: &mut isa::Builder, name: &str, detected: bool) {
+        isa_builder
+            .set(name, if detected { "1" } else { "0" })
+            .unwrap();
+    }
+
     let mut isa_builder = isa::lookup(Triple::host()).map_err(|err| match err {
         isa::LookupError::SupportDisabled => "support for architecture disabled at compile time",
         isa::LookupError::Unsupported => "unsupported architecture",
@@ -48,8 +56,6 @@ pub fn builder_with_options(infer_native_flags: bool) -> Result<isa::Builder, &'
 
     #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
     {
-        use cranelift_codegen::settings::Configurable;
-
         if !std::is_x86_feature_detected!("sse2") {
             return Err("x86 support requires SSE2");
         }
@@ -58,84 +64,111 @@ pub fn builder_with_options(infer_native_flags: bool) -> Result<isa::Builder, &'
             return Ok(isa_builder);
         }
 
-        if std::is_x86_feature_detected!("sse3") {
-            isa_builder.enable("has_sse3").unwrap();
-        }
-        if std::is_x86_feature_detected!("ssse3") {
-            isa_builder.enable("has_ssse3").unwrap();
-        }
-        if std::is_x86_feature_detected!("sse4.1") {
-            isa_builder.enable("has_sse41").unwrap();
-        }
-        if std::is_x86_feature_detected!("sse4.2") {
-            isa_builder.enable("has_sse42").unwrap();
-        }
-        if std::is_x86_feature_detected!("popcnt") {
-            isa_builder.enable("has_popcnt").unwrap();
-        }
-        if std::is_x86_feature_detected!("avx") {
-            isa_builder.enable("has_avx").unwrap();
-        }
-        if std::is_x86_feature_detected!("avx2") {
-            isa_builder.enable("has_avx2").unwrap();
-        }
-        if std::is_x86_feature_detected!("bmi1") {
-            isa_builder.enable("has_bmi1").unwrap();
-        }
-        if std::is_x86_feature_detected!("bmi2") {
-            isa_builder.enable("has_bmi2").unwrap();
-        }
-        if std::is_x86_feature_detected!("avx512bitalg") {
-            isa_builder.enable("has_avx512bitalg").unwrap();
-        }
-        if std::is_x86_feature_detected!("avx512dq") {
-            isa_builder.enable("has_avx512dq").unwrap();
-        }
-        if std::is_x86_feature_detected!("avx512f") {
-            isa_builder.enable("has_avx512f").unwrap();
-        }
-        if std::is_x86_feature_detected!("avx512vl") {
-            isa_builder.enable("has_avx512vl").unwrap();
-        }
-        if std::is_x86_feature_detected!("avx512vbmi") {
-            isa_builder.enable("has_avx512vbmi").unwrap();
-        }
-        if std::is_x86_feature_detected!("lzcnt") {
-            isa_builder.enable("has_lzcnt").unwrap();
-        }
+        set(
+            &mut isa_builder,
+            "has_sse3",
+            std::is_x86_feature_detected!("sse3"),
+        );
+        set(
+            &mut isa_builder,
+            "has_ssse3",
+            std::is_x86_feature_detected!("ssse3"),
+        );
+        set(
+            &mut isa_builder,
+            "has_sse41",
+            std::is_x86_feature_detected!("sse4.1"),
+        );
+        set(
+            &mut isa_builder,
+            "has_sse42",
+            std::is_x86_feature_detected!("sse4.2"),
+        );
+        set(
+            &mut isa_builder,
+            "has_popcnt",
+            std::is_x86_feature_detected!("popcnt"),
+        );
+        set(
+            &mut isa_builder,
+            "has_avx",
+            std::is_x86_feature_detected!("avx"),
+        );
+        set(
+            &mut isa_builder,
+            "has_avx2",
+            std::is_x86_feature_detected!("avx2"),
+        );
+        set(
+            &mut isa_builder,
+            "has_bmi1",
+            std::is_x86_feature_detected!("bmi1"),
+        );
+        set(
+            &mut isa_builder,
+            "has_bmi2",
+            std::is_x86_feature_detected!("bmi2"),
+        );
+        set(
+            &mut isa_builder,
+            "has_avx512bitalg",
+            std::is_x86_feature_detected!("avx512bitalg"),
+        );
+        set(
+            &mut isa_builder,
+            "has_avx512dq",
+            std::is_x86_feature_detected!("avx512dq"),
+        );
+        set(
+            &mut isa_builder,
+            "has_avx512f",
+            std::is_x86_feature_detected!("avx512f"),
+        );
+        set(
+            &mut isa_builder,
+            "has_avx512vl",
+            std::is_x86_feature_detected!("avx512vl"),
+        );
+        set(
+            &mut isa_builder,
+            "has_avx512vbmi",
+            std::is_x86_feature_detected!("avx512vbmi"),
+        );
+        set(
+            &mut isa_builder,
+            "has_lzcnt",
+            std::is_x86_feature_detected!("lzcnt"),
+        );
     }
 
     #[cfg(target_arch = "aarch64")]
     {
-        use cranelift_codegen::settings::Configurable;
-
         if !infer_native_flags {
             return Ok(isa_builder);
         }
 
-        if std::arch::is_aarch64_feature_detected!("lse") {
-            isa_builder.enable("has_lse").unwrap();
-        }
+        set(
+            &mut isa_builder,
+            "has_lse",
+            std::is_aarch64_feature_detected!("lse"),
+        );
     }
 
     // There is no is_s390x_feature_detected macro yet, so for now
     // we use getauxval from the libc crate directly.
     #[cfg(all(target_arch = "s390x", target_os = "linux"))]
     {
-        use cranelift_codegen::settings::Configurable;
-
         if !infer_native_flags {
             return Ok(isa_builder);
         }
 
         let v = unsafe { libc::getauxval(libc::AT_HWCAP) };
         const HWCAP_S390X_VXRS_EXT2: libc::c_ulong = 32768;
-        if (v & HWCAP_S390X_VXRS_EXT2) != 0 {
-            isa_builder.enable("has_vxrs_ext2").unwrap();
-            // There is no separate HWCAP bit for mie2, so assume
-            // that any machine with vxrs_ext2 also has mie2.
-            isa_builder.enable("has_mie2").unwrap();
-        }
+        let vxrs_ext2 = (v & HWCAP_S390X_VXRS_EXT2) != 0;
+        set(&mut isa_builder, "has_vxrs_ext2", vxrs_ext2);
+        // There is no separate HWCAP bit for mie2, so assume
+        // that any machine with vxrs_ext2 also has mie2.
+        set(&mut isa_builder, "has_mie2", vxrs_ext2);
     }
 
     // squelch warnings about unused mut/variables on some platforms.
