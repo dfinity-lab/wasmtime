@@ -1,5 +1,5 @@
 use std::env;
-use wasmtime_versioned_export_macros::versioned_suffix;
+use wasmtime_versioned_export_macros_build::versioned_suffix;
 
 fn main() {
     let mut build = cc::Build::new();

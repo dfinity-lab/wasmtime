@@ -24,7 +24,7 @@ features = [
 
 [build-dependencies]
 cc = "1.0"
-wasmtime-versioned-export-macros = { workspace = true }
+wasmtime-versioned-export-macros-build = { workspace = true }
 
 [dev-dependencies]
 backtrace = "0.3.68"

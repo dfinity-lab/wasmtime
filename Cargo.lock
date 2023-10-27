@@ -3596,6 +3596,7 @@ dependencies = [
  "rustix 0.38.8",
  "wasmtime-asm-macros",
  "wasmtime-versioned-export-macros",
+ "wasmtime-versioned-export-macros-build",
  "windows-sys",
 ]
 
@@ -3723,6 +3724,7 @@ dependencies = [
  "wasmtime-fiber",
  "wasmtime-jit-debug",
  "wasmtime-versioned-export-macros",
+ "wasmtime-versioned-export-macros-build",
  "wasmtime-wmemcheck",
  "windows-sys",
 ]
@@ -3740,6 +3742,15 @@ dependencies = [
 
 [[package]]
 name = "wasmtime-versioned-export-macros"
+version = "13.0.1"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.29",
+]
+
+[[package]]
+name = "wasmtime-versioned-export-macros-build"
 version = "13.0.1"
 dependencies = [
  "proc-macro2",
