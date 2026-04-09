@@ -22,17 +22,17 @@ jobs:
 
     # Automatically label PRs that touch certain directories with certain
     # labels.
-    - uses: bytecodealliance/labeler@schedule-fork
+    - uses: bytecodealliance/labeler@f6157f32fa13c4d01e14d3df38d4b6e17e36eb5f # schedule-fork
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
     # @-mention people who are subscribed to a label when an issue/PR is given
     # that label.
-    - uses: bytecodealliance/subscribe-to-label-action@v1
+    - uses: bytecodealliance/subscribe-to-label-action@f669a502948c4667f8db07a79e9c5c87b7852e0b # v1
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
     # Leave pre-determined comments on issues/PRs that are given a certain label.
-    - uses: bytecodealliance/label-messager-action@v1
+    - uses: bytecodealliance/label-messager-action@2f83571c7af396405ff3bad7777b187b9dd60f88 # v1
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
