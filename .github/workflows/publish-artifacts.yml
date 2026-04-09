@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'bytecodealliance/wasmtime'
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
     - run: |
         sha=${{ github.sha }}
         run_id=$(
@@ -34,7 +34,7 @@ jobs:
     - run: tar xf gh-pages.tar.gz
       working-directory: gh-pages
     - name: Deploy to gh-pages
-      uses: JamesIves/github-pages-deploy-action@v4
+      uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
       with:
         folder: ./gh-pages/gh-pages
         single-commit: true
